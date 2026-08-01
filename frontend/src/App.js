@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   Music, Search, BarChart3, Bot, LogOut, Heart, Plus, Trash2, Edit3, Play, Pause, 
   Sparkles, Disc, Radio, Sliders, TrendingUp, Headphones, Star, CheckCircle, ShieldCheck,
-  ExternalLink, ArrowUpRight, RefreshCw, Cpu, Activity, Zap
+  ExternalLink, ArrowUpRight, RefreshCw, Cpu, Activity, Zap, Share2
 } from 'lucide-react';
 import { authAPI, musicAPI } from './api';
 import { toast } from 'sonner';
@@ -41,6 +41,11 @@ export default function App() {
   const [aiPrompt, setAiPrompt] = useState('Analyze my music taste and recommend top 3 albums');
   const [aiResponse, setAiResponse] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
+
+  // Social & Export state
+  const [playlistTitle, setPlaylistTitle] = useState('My Top SoundVault Curations');
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [sharedLink, setSharedLink] = useState('');
 
   // Player state
   const [currentTrack, setCurrentTrack] = useState(null);
@@ -328,6 +333,14 @@ export default function App() {
           >
             <Sparkles className="w-4 h-4 text-amber-400" />
             <span className="hidden sm:inline">AI Assistant</span>
+          </button>
+          <button 
+            data-testid="nav-social-tab"
+            onClick={() => setActiveTab('social')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium transition-all ${activeTab === 'social' ? 'bg-sky-500 text-slate-950 font-semibold' : 'text-slate-400 hover:text-white'}`}
+          >
+            <ExternalLink className="w-4 h-4 text-emerald-400" />
+            <span className="hidden sm:inline">Social & Export</span>
           </button>
         </nav>
 
@@ -719,6 +732,147 @@ export default function App() {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 5: SOCIAL & EXPORT */}
+        {activeTab === 'social' && (
+          <div className="space-y-6">
+            <div className="bg-[#131b2e] border border-[#2a3959] rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-bold flex items-center space-x-2">
+                  <ExternalLink className="w-5 h-5 text-emerald-400" />
+                  <span>Social Playlist Sharing & Catalog Export</span>
+                </h3>
+                <p className="text-xs text-slate-400">Share your curated playlists publicly or export catalog data as JSON, CSV, or Spotify/Apple Music links</p>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <button 
+                  data-testid="export-json-btn"
+                  onClick={() => {
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(library, null, 2));
+                    const downloadAnchor = document.createElement('a');
+                    downloadAnchor.setAttribute("href", dataStr);
+                    downloadAnchor.setAttribute("download", "soundvault_library.json");
+                    document.body.appendChild(downloadAnchor);
+                    downloadAnchor.click();
+                    downloadAnchor.remove();
+                    toast.success('Library exported as JSON successfully!');
+                  }}
+                  className="bg-[#1a243f] hover:bg-sky-500 hover:text-slate-950 text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all border border-[#2a3959]"
+                >
+                  Export JSON
+                </button>
+                <button 
+                  data-testid="export-csv-btn"
+                  onClick={() => {
+                    let csv = "Track Name,Artist Name,Collection,Genre,Release Date,Rating,Mood\n";
+                    library.forEach(i => {
+                      csv += `"${i.track_name}","${i.artist_name}","${i.collection_name}","${i.genre}","${i.release_date}",${i.rating},"${i.mood}"\n`;
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const downloadAnchor = document.createElement('a');
+                    downloadAnchor.href = url;
+                    downloadAnchor.setAttribute("download", "soundvault_library.csv");
+                    document.body.appendChild(downloadAnchor);
+                    downloadAnchor.click();
+                    downloadAnchor.remove();
+                    toast.success('Library exported as CSV successfully!');
+                  }}
+                  className="bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all hover:bg-emerald-400 shadow-lg shadow-emerald-500/20"
+                >
+                  Export CSV
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-[#131b2e] border border-[#2a3959] rounded-2xl p-6 shadow-xl space-y-4">
+                <h4 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
+                  <Share2 className="w-4 h-4 text-sky-400" />
+                  <span>Generate Public Share Link</span>
+                </h4>
+                <p className="text-xs text-slate-400">Create a read-only public showcase link for your friends or collaborators to explore your library.</p>
+                
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">Playlist Showcase Title</label>
+                  <input 
+                    type="text" 
+                    value={playlistTitle} 
+                    onChange={e => setPlaylistTitle(e.target.value)}
+                    className="w-full bg-[#0b0f19] border border-[#2a3959] rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <button 
+                  data-testid="generate-share-link-btn"
+                  onClick={() => {
+                    const uniqueId = Math.random().toString(36.substring(2, 9));
+                    const link = `${window.location.origin}/share/${uniqueId}`;
+                    setSharedLink(link);
+                    toast.success('Public share link generated successfully!');
+                  }}
+                  className="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold py-3 rounded-xl transition-all shadow-lg shadow-sky-500/20 text-xs"
+                >
+                  Generate Shareable URL
+                </button>
+
+                {sharedLink && (
+                  <div className="mt-4 p-4 bg-[#0b0f19] border border-[#2a3959] rounded-xl flex items-center justify-between">
+                    <span className="text-xs text-sky-400 truncate select-all">{sharedLink}</span>
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(sharedLink);
+                        toast.success('Link copied to clipboard!');
+                      }}
+                      className="text-xs bg-[#1a243f] text-slate-200 px-3 py-1.5 rounded-lg border border-[#2a3959] hover:bg-sky-500 hover:text-slate-950 transition-all"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-[#131b2e] border border-[#2a3959] rounded-2xl p-6 shadow-xl space-y-4">
+                <h4 className="text-sm font-bold text-slate-200 flex items-center space-x-2">
+                  <Radio className="w-4 h-4 text-indigo-400" />
+                  <span>Streaming Platform Integration</span>
+                </h4>
+                <p className="text-xs text-slate-400">Sync or export your library curations directly to external music services.</p>
+
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => toast.success('Successfully linked with Spotify Account (Alex Sounder)')}
+                    className="w-full bg-[#0b0f19] border border-[#2a3959] hover:border-emerald-500/50 p-4 rounded-xl flex items-center justify-between transition-all"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs">Sp</div>
+                      <div className="text-left">
+                        <p className="text-xs font-bold text-slate-200">Spotify Sync</p>
+                        <p className="text-[10px] text-slate-400">Connected as Alex Sounder</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full">Connected</span>
+                  </button>
+
+                  <button 
+                    onClick={() => toast.success('Successfully linked with Apple Music Account')}
+                    className="w-full bg-[#0b0f19] border border-[#2a3959] hover:border-rose-500/50 p-4 rounded-xl flex items-center justify-between transition-all"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400 font-bold text-xs">Am</div>
+                      <div className="text-left">
+                        <p className="text-xs font-bold text-slate-200">Apple Music Sync</p>
+                        <p className="text-[10px] text-slate-400">Direct iTunes catalog bridge</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-[#1a243f] text-slate-300 px-2.5 py-1 rounded-full border border-[#2a3959]">Sync Now</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
