@@ -809,7 +809,7 @@ export default function App() {
                 <button 
                   data-testid="generate-share-link-btn"
                   onClick={() => {
-                    const uniqueId = Math.random().toString(36.substring(2, 9));
+                    const uniqueId = Math.random().toString(36).substring(2, 9);
                     const link = `${window.location.origin}/share/${uniqueId}`;
                     setSharedLink(link);
                     toast.success('Public share link generated successfully!');
