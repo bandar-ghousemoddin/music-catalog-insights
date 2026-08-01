@@ -1,78 +1,25 @@
 {
-  "app_name": "SoundVault OS",
-  "app_type": "dashboard",
-  "theme": "sleek-dark-mode",
-  "archetype": "LUXURY_AND_PRECISION",
+  "theme": "sleek_dark_mode",
+  "palette": {
+    "background": "#0b0f19",
+    "surface": "#131b2e",
+    "surface_card": "#1a243f",
+    "border": "#2a3959",
+    "primary": "#38bdf8",
+    "primary_glow": "rgba(56, 189, 248, 0.2)",
+    "accent": "#f43f5e",
+    "text_main": "#f8fafc",
+    "text_muted": "#94a3b8"
+  },
   "typography": {
-    "heading_font": "Plus Jakarta Sans, sans-serif",
-    "body_font": "Inter, sans-serif",
-    "mono_font": "JetBrains Mono, monospace",
-    "hierarchy": {
-      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-extrabold",
-      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
-      "h3": "text-xl sm:text-2xl font-semibold",
-      "h4": "text-lg sm:text-xl font-semibold",
-      "body": "text-base leading-relaxed",
-      "small": "text-sm text-zinc-400"
-    }
+    "font_heading": "Space Grotesk, sans-serif",
+    "font_body": "Inter, sans-serif"
   },
-  "colors": {
-    "background": "#090A0F",
-    "surface": "#12141C",
-    "surface_elevated": "#1A1D29",
-    "primary": "#6366F1",
-    "primary_hover": "#4F46E5",
-    "accent_cyan": "#06B6D4",
-    "accent_purple": "#8B5CF6",
-    "text_main": "#F8FAFC",
-    "text_muted": "#94A3B8",
-    "border": "#27272A",
-    "forbidden_check": {
-      "forbidden_dashboard_color": "#1B93A4",
-      "forbidden_ai_color": "#7351B7",
-      "forbidden_font_space_grotesk": "excluded",
-      "forbidden_inter_for_headings": "excluded"
-    }
-  },
-  "visual_enhancers": {
-    "glassmorphism": "backdrop-blur-xl bg-black/60 border border-white/10",
-    "shadows": "shadow-[0_8px_32px_rgba(0,0,0,0.37)]",
-    "border_radius": "rounded-xl",
-    "textures": "subtle radial glow and grain overlay"
-  },
-  "components": {
-    "navigation": "Sticky glassmorphism header with live search & library shortcut",
-    "itunes_search": "Instant debounced search connecting to iTunes Search API with preview player",
-    "personal_library": "CRUD library supporting favorites, custom tags, playlists, and notes",
-    "analytics_dashboard": "Interactive Recharts visualization (genre distribution, tempo/bpm analytics, mood radar, playback trends)",
-    "ai_recommendations": "AI-driven music recommendations & mood classification engine with simulated deep audio feature analysis",
-    "auth_modal": "JWT Authentication simulation supporting persistent session & profile management"
-  },
-  "image_urls": [
-    {
-      "category": "Hero Background",
-      "description": "Neon aesthetic music studio atmosphere",
-      "image_url": "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwxfHxhbGJ1bSUyMGNvdmVyJTIwYXJ0JTIwbmVvbiUyMGFlc3RoZXRpY3xlbnwwfHx8fDE3ODQyNjA5ODN8MA&ixlib=rb-4.1.0&q=85"
-    },
-    {
-      "category": "Audio Studio Vibe",
-      "description": "Vinyl and studio desk lighting",
-      "image_url": "https://images.unsplash.com/photo-1698151256842-e658014ea99a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTZ8MHwxfHNlYXJjaHwxfHx2aW55bCUyMHJlY29yZCUyMHN0dWRpbyUyMGRhcmslMjBhZXN0aGV0aWN8ZW58MHx8fHwxNzgyMDIzODU3fDA&ixlib=rb-4.1.0&q=85"
-    }
-  ],
-  "instructions_to_main_agent": [
-    "Build a fully responsive React app with Tailwind CSS and Lucide React icons.",
-    "Implement iTunes Search API integration with mock fallback for robust reliability.",
-    "Include personal library CRUD with local storage & backend sync.",
-    "Build interactive Recharts analytics dashboard with genre trends, mood distribution, and listening metrics.",
-    "Implement AI-driven music recommendations & mood classification engine.",
-    "Ensure all interactive elements have data-testid attributes for testing.",
-    "Follow sleek dark mode styling with gorgeous gradients and glassmorphic panels."
-  ],
-  "universal_guidelines": [
-    "No universal transition all",
-    "Always specify hover text colors",
-    "Data-testid on all interactive elements",
-    "No transparent headers without backdrop blur"
+  "features": [
+    "iTunes Catalog Search with debounce & filters",
+    "Personal Library Management with CRUD & pre-populated sample items",
+    "Interactive Analytics Dashboard with 5 charts (Recharts)",
+    "AI Recommendations & Mood Classification assistant",
+    "JWT Authentication with demo login & signup"
   ]
 }
